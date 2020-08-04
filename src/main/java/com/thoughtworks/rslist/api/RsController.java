@@ -37,4 +37,9 @@ public class RsController {
   public void addEvent(@RequestBody RsEvent event) {
     rsList.add(event);
   }
+
+  @PostMapping("/modify/event/{id}")
+  public void modifyEvent(@RequestBody RsEvent event, @PathVariable int id) {
+    rsList.set(id-1, event);
+  }
 }
