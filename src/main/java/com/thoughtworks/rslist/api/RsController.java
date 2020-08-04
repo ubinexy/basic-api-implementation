@@ -1,6 +1,7 @@
 package com.thoughtworks.rslist.api;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
@@ -13,5 +14,10 @@ public class RsController {
   @GetMapping(path="/rs/list")
   public String getRsEventList() {
     return rsList.toString();
+  }
+
+  @GetMapping(path="/rs/event/{id}")
+  public String getRsEvent(@PathVariable int id) {
+    return rsList.get(id-1);
   }
 }
