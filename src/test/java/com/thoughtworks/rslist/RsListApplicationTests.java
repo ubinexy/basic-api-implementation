@@ -24,6 +24,13 @@ class RsListApplicationTests {
     @Autowired
     private MockMvc mvc;
 
+    @Autowired
+    private RsController rsController;
+
+    @BeforeEach
+    public void setUp() {
+        rsController.rsList = rsController.initRsEventList();
+    }
     @Test
     void contextLoads() {
     }
