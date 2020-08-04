@@ -1,13 +1,53 @@
 package com.thoughtworks.rslist;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.rslist.domain.RsEvent;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@AutoConfigureMockMvc
 @SpringBootTest
 class RsListApplicationTests {
 
+    @Autowired
+    private MockMvc mvc;
+
     @Test
     void contextLoads() {
+    }
+
+    @Test
+    void should_return_EventList_when_getEventList() throws Exception {
+
+        mvc.perform(get("/event/list").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].eventName").value("事件1"))
+                .andExpect(jsonPath("$[0].keyword").value("无"))
+                .andExpect(jsonPath("$[1].eventName").value("事件2"))
+                .andExpect(jsonPath("$[0].keyword").value("无"))
+                .andExpect(jsonPath("$[2].eventName").value("事件3"))
+                .andExpect(jsonPath("$[0].keyword").value("无"));
+
+        mvc.perform(get("/event/list?start=1&end=2").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].eventName").value("事件1"))
+                .andExpect(jsonPath("$[0].keyword").value("无"))
+                .andExpect(jsonPath("$[1].eventName").value("事件2"))
+                .andExpect(jsonPath("$[1].keyword").value("无"));
     }
 
 }
