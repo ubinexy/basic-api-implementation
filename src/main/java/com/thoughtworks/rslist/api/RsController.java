@@ -12,7 +12,7 @@ public class RsController {
 
   private List<RsEvent> rsList = initRsEventList();
 
-  private List<RsEvent> initRsEventList() {
+  public List<RsEvent> initRsEventList() {
     List<RsEvent> rsEventList = new ArrayList<>();
     rsEventList.add(new RsEvent("事件1","无"));
     rsEventList.add(new RsEvent("事件2","无"));
@@ -31,5 +31,10 @@ public class RsController {
   @GetMapping("/event/{id}")
   public RsEvent getEvent(@PathVariable int id) {
     return rsList.get(id-1);
+  }
+
+  @PostMapping("/add/event")
+  public void addEvent(@RequestBody RsEvent event) {
+    rsList.add(event);
   }
 }

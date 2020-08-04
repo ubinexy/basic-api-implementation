@@ -1,8 +1,9 @@
 package com.thoughtworks.rslist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.rslist.api.RsController;
 import com.thoughtworks.rslist.domain.RsEvent;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class RsListApplicationTests {
 
     @Autowired
@@ -27,6 +29,7 @@ class RsListApplicationTests {
     }
 
     @Test
+    @Order(1)
     void should_return_EventList_when_getEventList() throws Exception {
 
         mvc.perform(get("/event/list").accept(MediaType.APPLICATION_JSON))
@@ -36,9 +39,9 @@ class RsListApplicationTests {
                 .andExpect(jsonPath("$[0].eventName").value("事件1"))
                 .andExpect(jsonPath("$[0].keyword").value("无"))
                 .andExpect(jsonPath("$[1].eventName").value("事件2"))
-                .andExpect(jsonPath("$[0].keyword").value("无"))
+                .andExpect(jsonPath("$[1].keyword").value("无"))
                 .andExpect(jsonPath("$[2].eventName").value("事件3"))
-                .andExpect(jsonPath("$[0].keyword").value("无"));
+                .andExpect(jsonPath("$[2].keyword").value("无"));
 
         mvc.perform(get("/event/list?start=1&end=2").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -51,6 +54,7 @@ class RsListApplicationTests {
     }
 
     @Test
+    @Order(2)
     void should_return_the_event_when_get_event_given_event_id() throws Exception {
         mvc.perform(get("/event/3").accept(MediaType.APPLICATION_JSON))
                 .andExpect(content().contentType("application/json"))
@@ -60,6 +64,7 @@ class RsListApplicationTests {
     }
 
     @Test
+    @Order(3)
     void should_return_modified_list_when_getEventList_given_add_an_event() throws Exception {
         RsEvent rsEvent = new RsEvent("涨价了", "经济");
         ObjectMapper objectMapper = new ObjectMapper();
