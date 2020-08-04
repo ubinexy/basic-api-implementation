@@ -42,4 +42,9 @@ public class RsController {
   public void modifyEvent(@RequestBody RsEvent event, @PathVariable int id) {
     rsList.set(id-1, event);
   }
+
+  @PostMapping("/delete/event/{id}")
+  public void deleteEvent(@PathVariable int id) {
+    rsList.remove(rsList.get(id-1));
+  }
 }
