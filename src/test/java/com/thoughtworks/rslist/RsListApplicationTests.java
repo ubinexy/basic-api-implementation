@@ -50,4 +50,13 @@ class RsListApplicationTests {
                 .andExpect(jsonPath("$[1].keyword").value("无"));
     }
 
+    @Test
+    void should_return_the_event_when_get_event_given_event_id() throws Exception {
+        mvc.perform(get("/event/3").accept(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/json"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.eventName").value("事件3"))
+                .andExpect(jsonPath("$.keyword").value("无"));
+    }
+
 }
