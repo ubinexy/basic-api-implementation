@@ -59,4 +59,26 @@ class RsListApplicationTests {
                 .andExpect(jsonPath("$.keyword").value("无"));
     }
 
+    @Test
+    void should_return_modified_list_when_getEventList_given_add_an_event() throws Exception {
+        RsEvent rsEvent = new RsEvent("涨价了", "经济");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonStr = objectMapper.writeValueAsString(rsEvent);
+
+        mvc.perform(post("/add/event").content(jsonStr).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        mvc.perform(get("/event/list").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$", hasSize(4)))
+                .andExpect(jsonPath("$[0].eventName").value("事件1"))
+                .andExpect(jsonPath("$[0].keyword").value("无"))
+                .andExpect(jsonPath("$[1].eventName").value("事件2"))
+                .andExpect(jsonPath("$[1].keyword").value("无"))
+                .andExpect(jsonPath("$[2].eventName").value("事件3"))
+                .andExpect(jsonPath("$[2].keyword").value("无"))
+                .andExpect(jsonPath("$[3].eventName").value("涨价了"))
+                .andExpect(jsonPath("$[3].keyword").value("经济"));
+    }
 }
