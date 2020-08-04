@@ -33,10 +33,14 @@ class RsListApplicationTests {
     }
 
     @Test
-    void should_return_message_when_call_get() throws Exception {
+    void should_return_eventlist_when_call_get() throws Exception {
 
         mockMvc.perform(get("/rs/list")).andExpect(content().string("[第一条事件, 第二条事件, 第三条事件]"))
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void should_return_firstEvent_when_call_get() throws Exception {
+        mockMvc.perform(get("/rs/event/1")).andExpect(content().string("第一条事件")).andExpect(status().isOk());
+    }
 }
