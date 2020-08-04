@@ -27,4 +27,9 @@ public class RsController {
     }
     return rsList;
   }
+
+  @GetMapping("/event/{id}")
+  public RsEvent getEvent(@PathVariable int id) {
+    return rsList.get(id-1);
+  }
 }
