@@ -100,7 +100,7 @@ class RsControllerTest {
         String jsonStr = "{\"eventName\":\"涨价了\",\"keyword\":\"经济\",\"user\":{\"username\":\"default\",\"gender\":\"male\",\"age\":20,\"email\":\"default@default.com\",\"phone\":\"18888888888\"}}";
 
         mvc.perform(post("/rs/event").content(jsonStr).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         mvc.perform(get("/rs/list").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

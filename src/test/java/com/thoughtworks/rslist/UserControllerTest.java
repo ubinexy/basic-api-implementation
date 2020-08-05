@@ -24,6 +24,6 @@ public class UserControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonStr = objectMapper.writeValueAsString(user);
         mvc.perform(post("/user").content(jsonStr).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 }
