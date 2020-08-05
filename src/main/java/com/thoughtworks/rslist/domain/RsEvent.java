@@ -1,4 +1,3 @@
-//RsEvent
 package com.thoughtworks.rslist.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -42,5 +41,13 @@ public class RsEvent {
 
     public String getKeyword() {
         return keyword;
+    }
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
+
+    public void setKeyWord(String keyWord) {
+        this.keyword = keyword;
     }
 }
