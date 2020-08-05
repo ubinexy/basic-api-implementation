@@ -39,8 +39,9 @@ public class RsController {
   }
 
   @PostMapping("/rs/event")
-  public void addEvent(@RequestBody RsEvent event) {
+  public ResponseEntity addEvent(@RequestBody RsEvent event) {
       rsList.add(event);
+      return ResponseEntity.created(null).build();
   }
 
   @PatchMapping("/rs/event/{id}")
