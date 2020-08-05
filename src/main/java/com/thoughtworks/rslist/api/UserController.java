@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 public class UserController {
 
-    private List<User> userList = new ArrayList<>();
+    public List<User> userList = new ArrayList<>();
 
     @GetMapping("/users")
     public List<User> getUserList() {
