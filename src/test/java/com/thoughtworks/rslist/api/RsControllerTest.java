@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -47,9 +48,9 @@ public class RsControllerTest {
 
     @Test
     void should_add_an_event_to_database() throws Exception {
-        RsEvent expectEvent = new RsEvent("Price raised", "none", defaultUser);
+        RsEvent expectEvent = new RsEvent("热搜事件名", "关键字", 1);
 
-        String jsonString = "{\"eventName\":\"Price raised\",\"keyword\":\"none\",\"userId\":1}";
+        String jsonString = "{\"eventName\":\"热搜事件名\",\"keyword\":\"关键字\",\"userId\":1}";
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
@@ -57,5 +58,12 @@ public class RsControllerTest {
         RsEventDto actualEvent = all.get(0);
         assertEquals(expectEvent.getEventName(), actualEvent.getEventName());
         assertEquals(expectEvent.getKeyword(), actualEvent.getKeyword());
+    }
+
+    @Test
+    void should_return_400_event_when_add_event_given_user_id_not_exist() throws Exception {
+        String jsonString = "{\"eventName\":\"热搜事件名\",\"keyword\":\"关键字\",\"userId\":100}";
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 }

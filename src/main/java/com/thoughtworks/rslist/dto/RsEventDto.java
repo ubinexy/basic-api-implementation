@@ -15,7 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class RsEventDto {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "name")
     private String eventName;

@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.dto.UserDto;
+import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,11 @@ class UserControllerTest {
 
     @BeforeEach
     void setUp() {
+        userRepository.deleteAll();
+    }
+
+    @AfterEach
+    void setd() {
         userRepository.deleteAll();
     }
 
@@ -115,4 +122,22 @@ class UserControllerTest {
         assertEquals("alice@email.com", remainUser.getEmail());
         assertEquals("13333333333", remainUser.getPhone());
     }
+
+    @Test
+    void should_delete_corresponding_event_when_delete_user() throws Exception {
+        UserDto userBob = UserDto.builder()
+                .username("Bob")
+                .gender("male")
+                .age(18)
+                .email("bob@email.com")
+                .phone("18888888888")
+                .build();
+
+
+
+        mockMvc.perform(delete("/user/1").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+
 }
