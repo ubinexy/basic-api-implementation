@@ -66,4 +66,30 @@ public class RsControllerTest {
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void should_delete_corresponding_event_when_delete_user() throws Exception {
+        String firstEvent = "{\"eventName\":\"热搜事件一\",\"keyword\":\"关键字一\",\"userId\":1}";
+        String secondEvent = "{\"eventName\":\"热搜事件二\",\"keyword\":\"关键字二\",\"userId\":1}";
+
+        mockMvc.perform(post("/rs/event").content(firstEvent).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(post("/rs/event").content(secondEvent).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        List<RsEventDto> eventsBeforeDelete = rsEventRepository.findAll();
+
+        assertEquals(2, eventsBeforeDelete.size());
+        assertEquals(eventsBeforeDelete.get(0).getEventName(), "热搜事件一");
+        assertEquals(eventsBeforeDelete.get(0).getKeyword(), "关键字一");
+        assertEquals(eventsBeforeDelete.get(1).getEventName(), "热搜事件二");
+        assertEquals(eventsBeforeDelete.get(1).getKeyword(), "关键字二");
+
+        mockMvc.perform(delete("/user/1"))
+                .andExpect(status().isOk());
+
+        List<RsEventDto> eventsAfterDelete = rsEventRepository.findAll();
+        assertEquals(0, eventsAfterDelete.size());
+    }
 }
