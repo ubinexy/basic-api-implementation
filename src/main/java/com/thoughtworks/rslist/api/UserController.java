@@ -38,4 +38,5 @@ public class UserController {
         userList.add(user);
         return ResponseEntity.created(null).build();
     }
+
 }

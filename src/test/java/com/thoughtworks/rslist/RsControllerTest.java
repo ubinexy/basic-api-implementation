@@ -1,24 +1,17 @@
-package com.thoughtworks.rslist.api;
+package com.thoughtworks.rslist;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.api.RsController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.domain.RsEvent;
-import com.thoughtworks.rslist.dto.RsEventDto;
-import com.thoughtworks.rslist.dto.UserDto;
-import com.thoughtworks.rslist.repository.RsEventRepository;
-import com.thoughtworks.rslist.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
-import org.omg.CORBA.RepositoryIdHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -30,12 +23,6 @@ class RsControllerTest {
 
     @Autowired
     private MockMvc mvc;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RsEventRepository rsEventRepository;
 
     @Autowired
     private RsController rsController;
@@ -291,12 +278,4 @@ class RsControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error", is("invalid param")));
     }
-
-    void shouldAddRsEventWhenUserExist() throws Exception {
-        UserDto save =userRepository.save(UserDto.builder().email().phone().age(19).userName().build());
-        String jsonValue = "{\"eventName\":\"涨价了\",\"keyword\":\"经济\",\"userId\":" + save.getId() + "}";
-
-        List<RsEventDto> all = rsEventRepository().finAll();
-    }
 }
-
