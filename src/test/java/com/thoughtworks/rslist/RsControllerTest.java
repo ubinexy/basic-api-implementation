@@ -144,8 +144,8 @@ class RsControllerTest {
         mvc.perform(get("/users").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].username", is("default")))
-                .andExpect(jsonPath("$[1].username", is("shiqi")));
+                .andExpect(jsonPath("$[0].user_name", is("default")))
+                .andExpect(jsonPath("$[1].user_name", is("shiqi")));
     }
 
 
