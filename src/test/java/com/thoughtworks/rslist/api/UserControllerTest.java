@@ -81,4 +81,38 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.user_email", is("default@email.com")))
                 .andExpect(jsonPath("$.user_phone", is("18888888888")));
     }
+
+    @Test
+    void should_delete_user_by_user_id() throws Exception {
+        UserDto userBob = UserDto.builder()
+                .username("Bob")
+                .gender("male")
+                .age(18)
+                .email("bob@email.com")
+                .phone("18888888888")
+                .build();
+
+        UserDto userAlice = UserDto.builder()
+                .username("Alice")
+                .gender("female")
+                .age(36)
+                .email("alice@email.com")
+                .phone("13333333333")
+                .build();
+
+        userRepository.save(userBob);
+        userRepository.save(userAlice);
+
+        mockMvc.perform(delete("/user/1").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        List<UserDto> users = userRepository.findAll();
+        UserDto remainUser = users.get(0);
+        assertEquals(2, remainUser.getId());
+        assertEquals("Alice" , remainUser.getUsername());
+        assertEquals("female", remainUser.getGender());
+        assertEquals(36, remainUser.getAge());
+        assertEquals("alice@email.com", remainUser.getEmail());
+        assertEquals("13333333333", remainUser.getPhone());
+    }
 }
