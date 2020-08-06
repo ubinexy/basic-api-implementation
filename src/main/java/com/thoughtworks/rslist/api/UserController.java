@@ -28,4 +28,11 @@ public class UserController {
         userRepository.save(userDto);
         return ResponseEntity.created(null).build();
     }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<User> getUser(@PathVariable int id) {
+        UserDto userDto = userRepository.findById(id).get();
+        return ResponseEntity.ok()
+                .body(new User(userDto.getUsername(), userDto.getGender(), userDto.getAge(), userDto.getEmail(), userDto.getPhone()));
+    }
 }
