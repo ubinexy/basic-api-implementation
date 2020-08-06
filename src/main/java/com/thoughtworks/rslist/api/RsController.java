@@ -29,7 +29,6 @@ public class RsController {
     RsEventDto eventDto = RsEventDto.builder()
             .eventName(event.getEventName())
             .keyword(event.getKeyword())
-            .userId(event.getUserId())
             .build();
     rsEventRepository.save(eventDto);
     return ResponseEntity.created(null).build();

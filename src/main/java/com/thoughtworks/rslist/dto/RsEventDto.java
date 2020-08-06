@@ -5,13 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
+@Table(name = "rsEvent")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,5 +20,7 @@ public class RsEventDto {
     @Column(name = "name")
     private String eventName;
     private String keyword;
-    private int userId;
+
+    @ManyToOne
+    private UserDto userDto;
 }
