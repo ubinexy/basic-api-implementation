@@ -31,7 +31,11 @@ public class UserControllerTest {
 
     @BeforeEach
     void setUp() {
-        userController.userList = new ArrayList<User>();
+        userController.userList = userController.initUserList();
+    }
+
+    @Test
+    void contextLoads() {
     }
 
     @Test
@@ -59,5 +63,15 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$[0].user_age", is(20)))
                 .andExpect(jsonPath("$[0].user_email", is("default@email.com")))
                 .andExpect(jsonPath("$[0].user_phone", is("18888888888")));
+    }
+
+    @Test
+    void should_return_400_when_addUser() throws Exception{
+        User user = new User("defaulttt", "male", 20, "default@email.com", "18888888888");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonStr = objectMapper.writeValueAsString(user);
+        mvc.perform(post("/user").content(jsonStr).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("invalid user")));
     }
 }
