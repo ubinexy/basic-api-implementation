@@ -61,4 +61,24 @@ class UserControllerTest {
         assertEquals(user.getEmail(), actualUser.getEmail());
         assertEquals(user.getPhone(), actualUser.getPhone());
     }
+
+    @Test
+    void should_get_user_from_database_by_user_id() throws Exception {
+        UserDto userDto = UserDto.builder()
+                .username("default")
+                .gender("male")
+                .age(18)
+                .email("default@email.com")
+                .phone("18888888888")
+                .build();
+        userRepository.save(userDto);
+
+        mockMvc.perform(get("/user/1").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.user_name", is("default")))
+                .andExpect(jsonPath("$.user_age", is(18)))
+                .andExpect(jsonPath("$.user_gender", is("male")))
+                .andExpect(jsonPath("$.user_email", is("default@email.com")))
+                .andExpect(jsonPath("$.user_phone", is("18888888888")));
+    }
 }
