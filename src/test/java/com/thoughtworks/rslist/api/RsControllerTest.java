@@ -17,8 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -91,5 +90,47 @@ public class RsControllerTest {
 
         List<RsEventDto> eventsAfterDelete = rsEventRepository.findAll();
         assertEquals(0, eventsAfterDelete.size());
+    }
+
+    @Test
+    void should_update_event_given_matching_userId() throws Exception {
+        String firstEvent = "{\"eventName\":\"热搜事件名\",\"keyword\":\"关键字\",\"userId\":1}";
+        mockMvc.perform(post("/rs/event").content(firstEvent).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        String patchEventName = "{\"eventName\":\"修改热搜事件名\",\"userId\":1}";
+        mockMvc.perform(patch("/rs/event/1").content(patchEventName).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        RsEventDto event = rsEventRepository.findById(1).get();
+        assertEquals(event.getEventName(), "修改热搜事件名");
+        assertEquals(event.getEventName(), "关键字");
+
+        String patchKeyword = "{\"keyword\":\"修改关键字\",\"userId\":1}";
+        mockMvc.perform(patch("/rs/event/1").content(patchKeyword).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        event = rsEventRepository.findById(1).get();
+        assertEquals(event.getEventName(), "修改热搜事件名");
+        assertEquals(event.getEventName(), "修改关键字");
+
+        String patchEventNameAndKeyword = "{\"eventName\":\"再次修改热搜事件名\",\"keyword\":\"再次修改关键字\",\"userId\":1}";
+        mockMvc.perform(patch("/rs/event/1").content(patchEventNameAndKeyword).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        event = rsEventRepository.findById(1).get();
+        assertEquals(event.getEventName(), "再次修改热搜事件名");
+        assertEquals(event.getEventName(), "再次修改关键字");
+    }
+
+    @Test
+    void should_return_400_given_mismatching_userId() throws Exception {
+        String firstEvent = "{\"eventName\":\"热搜事件名\",\"keyword\":\"关键字\",\"userId\":1}";
+        mockMvc.perform(post("/rs/event").content(firstEvent).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+        String patch = "{\"eventName\":\"修改热搜事件名\",\"userId\":2}";
+
+        mockMvc.perform(patch("/rs/event/1").content(patch).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 }
