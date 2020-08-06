@@ -22,16 +22,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
-public class UserControllerTest {
+class UserControllerTest {
     @Autowired
-    MockMvc mvc;
-
-    @Autowired
-    private UserController userController;
+    private MockMvc mvc;
 
     @BeforeEach
     void setUp() {
-        userController.userList = userController.initUserList();
+        UserController.userList = UserController.initUserList();
     }
 
     @Test
@@ -40,7 +37,7 @@ public class UserControllerTest {
 
     @Test
     void should_regsiter_user() throws Exception {
-        User user = new User("default", "male", 18, "default@email.com", "18888888888");
+        User user = new User("default", "male", 20, "default@email.com", "18888888888");
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonStr = objectMapper.writeValueAsString(user);
         mvc.perform(post("/user").content(jsonStr).contentType(MediaType.APPLICATION_JSON))
@@ -49,11 +46,6 @@ public class UserControllerTest {
 
     @Test
     void should_return_userList_when_getUserList() throws Exception {
-        User user = new User("default", "male", 20, "default@email.com", "18888888888");
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonStr = objectMapper.writeValueAsString(user);
-        mvc.perform(post("/user").content(jsonStr).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
 
         mvc.perform(get("/users").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
