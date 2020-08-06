@@ -35,4 +35,10 @@ public class UserController {
         return ResponseEntity.ok()
                 .body(new User(userDto.getUsername(), userDto.getGender(), userDto.getAge(), userDto.getEmail(), userDto.getPhone()));
     }
+
+    @DeleteMapping("/user/{id}")
+    public ResponseEntity deleteUser(@PathVariable int id) {
+        userRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
 }
