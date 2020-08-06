@@ -47,9 +47,9 @@ public class RsControllerTest {
 
     @Test
     void should_add_an_event_to_database() throws Exception {
-        RsEvent expectEvent = new RsEvent("热搜事件名", "关键字", 1);
+        RsEvent expectEvent = new RsEvent("Price raised", "none", 1);
 
-        String jsonString = "{\"eventName\":\"热搜事件名\",\"keyword\":\"关键字\",\"userId\":1}";
+        String jsonString = "{\"eventName\":\"Price raised\",\"keyword\":\"none\",\"userId\":1}";
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
@@ -58,7 +58,6 @@ public class RsControllerTest {
         assertEquals(expectEvent.getEventName(), actualEvent.getEventName());
         assertEquals(expectEvent.getKeyword(), actualEvent.getKeyword());
         assertEquals(expectEvent.getUserId(), actualEvent.getUserId());
-
     }
 
     @Test
