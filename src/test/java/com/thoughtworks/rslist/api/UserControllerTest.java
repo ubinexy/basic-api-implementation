@@ -123,21 +123,5 @@ class UserControllerTest {
         assertEquals("13333333333", remainUser.getPhone());
     }
 
-    @Test
-    void should_delete_corresponding_event_when_delete_user() throws Exception {
-        UserDto userBob = UserDto.builder()
-                .username("Bob")
-                .gender("male")
-                .age(18)
-                .email("bob@email.com")
-                .phone("18888888888")
-                .build();
-
-
-
-        mockMvc.perform(delete("/user/1").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
-
 
 }

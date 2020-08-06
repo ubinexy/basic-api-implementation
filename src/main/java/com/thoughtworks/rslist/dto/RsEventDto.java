@@ -23,4 +23,7 @@ public class RsEventDto {
 
     @ManyToOne
     private UserDto userDto;
+
+    public void vote(int number) {
+    }
 }

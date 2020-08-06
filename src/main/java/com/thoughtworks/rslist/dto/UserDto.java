@@ -29,4 +29,8 @@ public class UserDto {
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "userDto")
     private List<RsEventDto> rsEventDtoList;
+
+    public void vote(int number) {
+        this.voteNum -= number;
+    }
 }
