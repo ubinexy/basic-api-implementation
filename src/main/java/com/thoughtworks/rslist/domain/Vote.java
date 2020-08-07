@@ -17,7 +17,7 @@ public class Vote {
 
     public Vote(int userId, String voteTime, int voteNum) {
         this.userId = userId;
-        this.voteTime = LocalDateTime.parse("2017-09-28 17:07:05");
+        this.voteTime = LocalDateTime.parse(voteTime);
         this.voteNum = voteNum;
     }
 
