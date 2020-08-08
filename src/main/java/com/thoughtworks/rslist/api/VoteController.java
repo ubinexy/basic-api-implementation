@@ -8,12 +8,15 @@ import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.repository.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 @RestController
 public class VoteController {
     @Autowired
@@ -22,6 +25,7 @@ public class VoteController {
     private RsEventRepository rsEventRepository;
     @Autowired
     private VoteRepository voteRepository;
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     @PostMapping("/rs/vote/{rsEventId}")
     ResponseEntity voteRsEvent(@PathVariable int rsEventId, @RequestBody Vote vote) {
@@ -45,5 +49,24 @@ public class VoteController {
                 .build()
         );
         return ResponseEntity.created(null).build();
+    }
+
+    @GetMapping("/rs/vote")
+    ResponseEntity<List<Vote>> getVote(@RequestParam int page, @RequestParam String from, @RequestParam String to) {
+        LocalDateTime start = LocalDateTime.parse(from, formatter);
+        LocalDateTime end = LocalDateTime.parse(to, formatter);
+        Pageable pageable = PageRequest.of(page, 5);
+
+        List<VoteDto> all = voteRepository.findByLocalDateTimeBetween(start, end, pageable);
+
+        List<Vote> v = all.stream().map(dto->Vote.builder()
+                .rsEventId(dto.getUser().getId())
+                .userId(dto.getUser().getId())
+                .voteNum(dto.getNum())
+                .voteTime(dto.getLocalDateTime())
+                .build()
+        ).collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(v);
     }
 }
