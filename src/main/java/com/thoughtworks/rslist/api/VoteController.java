@@ -1,10 +1,12 @@
 package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.Vote;
+import com.thoughtworks.rslist.dto.VoteDto;
 import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
+import com.thoughtworks.rslist.repository.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +20,8 @@ public class VoteController {
     private UserRepository userRepository;
     @Autowired
     private RsEventRepository rsEventRepository;
+    @Autowired
+    private VoteRepository voteRepository;
 
     @PostMapping("/rs/vote/{rsEventId}")
     ResponseEntity voteRsEvent(@PathVariable int rsEventId, @RequestBody Vote vote) {
@@ -33,13 +37,13 @@ public class VoteController {
         event.vote(vote.getVoteNum());
         userRepository.save(user);
         rsEventRepository.save(event);
-//        voteRepository.save(VoteDto.builder()
-//                .localDateTime(vote.getVoteTime())
-//                .rsEvent(event)
-//                .user(user)
-//                .num(vote.getVoteNum())
-//                .build()
-//        );
+        voteRepository.save(VoteDto.builder()
+                .localDateTime(vote.getVoteTime())
+                .rsEvent(event)
+                .user(user)
+                .num(vote.getVoteNum())
+                .build()
+        );
         return ResponseEntity.created(null).build();
     }
 }

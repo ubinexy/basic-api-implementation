@@ -3,7 +3,9 @@ package com.thoughtworks.rslist.api;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
+import com.thoughtworks.rslist.repository.VoteRepository;
 
+import com.thoughtworks.rslist.repository.VoteRepository;
 import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
@@ -28,10 +30,13 @@ public class VoteControllerTest {
     private UserRepository userRepository;
     @Autowired
     private RsEventRepository rsEventRepository;
+    @Autowired
+    private VoteRepository voteRepository;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     @BeforeEach
     private void setUp() {
+        voteRepository.deleteAll();
         userRepository.deleteAll();
         rsEventRepository.deleteAll();
         UserDto userDto = UserDto.builder()
