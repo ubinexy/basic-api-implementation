@@ -20,10 +20,11 @@ public class RsEventDto {
     @Column(name = "name")
     private String eventName;
     private String keyword;
-
+    private int voteNum = 0;
     @ManyToOne
     private UserDto userDto;
 
     public void vote(int number) {
+        voteNum += number;
     }
 }

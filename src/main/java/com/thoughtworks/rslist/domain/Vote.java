@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,7 +18,6 @@ import java.time.format.DateTimeFormatter;
 public class Vote {
     @NotNull
     private int userId;
-    @NotNull
     private int rsEventId;
     @NotNull
     @JsonProperty("vote_dateTime")
@@ -26,6 +26,7 @@ public class Vote {
     @NotNull
     @JsonProperty("vote_number")
     @JsonAlias("voteNum")
+    @Min(1)
     private int voteNum;
 
     public Vote(int userId, int rsEventId, LocalDateTime voteTime, int voteNum) {
