@@ -33,6 +33,13 @@ public class VoteController {
         event.vote(vote.getVoteNum());
         userRepository.save(user);
         rsEventRepository.save(event);
+//        voteRepository.save(VoteDto.builder()
+//                .localDateTime(vote.getVoteTime())
+//                .rsEvent(event)
+//                .user(user)
+//                .num(vote.getVoteNum())
+//                .build()
+//        );
         return ResponseEntity.created(null).build();
     }
 }

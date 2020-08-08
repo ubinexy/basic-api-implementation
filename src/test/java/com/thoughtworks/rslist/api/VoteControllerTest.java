@@ -28,6 +28,7 @@ public class VoteControllerTest {
     private UserRepository userRepository;
     @Autowired
     private RsEventRepository rsEventRepository;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     @BeforeEach
     private void setUp() {
@@ -68,6 +69,6 @@ public class VoteControllerTest {
 
     private String printTime() {
         LocalDateTime time = LocalDateTime.now();
-        return DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(time);
+        return time.format(formatter);
     }
 }

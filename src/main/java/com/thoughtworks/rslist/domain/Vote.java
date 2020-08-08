@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 @Data
@@ -17,7 +18,7 @@ public class Vote {
 
     public Vote(int userId, String voteTime, int voteNum) {
         this.userId = userId;
-        this.voteTime = LocalDateTime.parse(voteTime);
+        this.voteTime = LocalDateTime.parse(voteTime, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
         this.voteNum = voteNum;
     }
 
