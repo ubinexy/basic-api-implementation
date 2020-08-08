@@ -107,7 +107,7 @@ public class VoteControllerTest {
         return time.format(formatter);
     }
 
-//    @Test
+    @Test
     void should_return_votes_between_start_and_end_dateTime() throws Exception {
         String startDateTime = "2020-08-01T09:00:00";
         String endDateTime = "2020-08-01T11:00:00";
@@ -131,7 +131,7 @@ public class VoteControllerTest {
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].vote_dateTime", is("2020-08-01T10:00:00")))
                 .andExpect(jsonPath("$[0].vote_number", is(2)))
-                .andExpect(jsonPath("$[1].vote_dateTime", is("2020-08-01T10:00:00")))
+                .andExpect(jsonPath("$[1].vote_dateTime", is("2020-08-02T10:00:00")))
                 .andExpect(jsonPath("$[1].vote_number", is(4)));
     }
 }
