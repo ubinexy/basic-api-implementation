@@ -10,44 +10,55 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 @RestController
 public class RsController {
-  @Autowired
-  private UserRepository userRepository;
-  @Autowired
-  private RsEventRepository rsEventRepository;
 
-  @PostMapping("/rs/event")
-  ResponseEntity addEvent(@RequestBody @Valid RsEvent event) {
-    if(!userRepository.existsById(event.getUserId())) return ResponseEntity.badRequest().build();
+    private final UserRepository userRepository;
+    private final RsEventRepository rsEventRepository;
 
-    UserDto userDto = userRepository.findById(event.getUserId()).get();
+    @Autowired
+    public RsController(UserRepository userRepository, RsEventRepository rsEventRepository) {
+        this.userRepository = userRepository;
+        this.rsEventRepository = rsEventRepository;
+    }
 
-    RsEventDto eventDto = RsEventDto.builder()
-            .eventName(event.getEventName())
-            .keyword(event.getKeyword())
-            .userDto(userDto)
-            .build();
+    @PostMapping("/rs/event")
+    ResponseEntity addEvent(@RequestBody @Valid RsEvent event) {
+        if(!userRepository.existsById(event.getUserId())) {
+            return ResponseEntity.badRequest().build();
+        }
 
-    userDto.getRsEventDtoList().add(eventDto);
+        UserDto userDto = userRepository.findById(event.getUserId()).get();
 
-    rsEventRepository.save(eventDto);
-    return ResponseEntity.created(null).build();
-  }
+        RsEventDto eventDto = RsEventDto.builder()
+                .eventName(event.getEventName())
+                .keyword(event.getKeyword())
+                .userDto(userDto)
+                .build();
 
-  @PatchMapping("/rs/event/{id}")
-  ResponseEntity updateEvent(@PathVariable Integer id, @RequestBody RsEvent event) {
-      RsEventDto eventDto = rsEventRepository.findById(id).get();
-      if(eventDto.getUserDto().getId() != event.getUserId()) {
-        return ResponseEntity.badRequest().build();
-      }
-      if(event.getEventName() != null) eventDto.setEventName(event.getEventName());
-      if(event.getKeyword() != null) eventDto.setKeyword(event.getKeyword());
-      rsEventRepository.save(eventDto);
-      return ResponseEntity.ok().build();
-  }
+        userDto.getRsEventDtoList().add(eventDto);
+
+        rsEventRepository.save(eventDto);
+        return ResponseEntity.created(null).build();
+    }
+
+    @PatchMapping("/rs/event/{id}")
+    ResponseEntity updateEvent(@PathVariable Integer id, @RequestBody @Valid RsEvent event) {
+        if(!rsEventRepository.existsById(id)) {
+            return ResponseEntity.badRequest().build();
+        }
+        RsEventDto eventDto = rsEventRepository.findById(id).get();
+        if(eventDto.getUserDto().getId() != event.getUserId()) {
+            return ResponseEntity.badRequest().build();
+        }
+        if(event.getEventName() != null) {
+            eventDto.setEventName(event.getEventName());
+        }
+        if(event.getKeyword() != null) {
+            eventDto.setKeyword(event.getKeyword());
+        }
+        rsEventRepository.save(eventDto);
+            return ResponseEntity.ok().build();
+    }
 }

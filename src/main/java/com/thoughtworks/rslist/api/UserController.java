@@ -13,8 +13,12 @@ import java.util.Optional;
 
 @RestController
 public class UserController {
-    @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    public UserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @PostMapping("/user")
     public ResponseEntity addUser(@RequestBody @Valid User user) {
@@ -31,6 +35,9 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     public ResponseEntity<User> getUser(@PathVariable int id) {
+        if(userRepository.existsById(id)) {
+            return ResponseEntity.badRequest().build();
+        }
         UserDto userDto = userRepository.findById(id).get();
         return ResponseEntity.ok()
                 .body(new User(userDto.getUsername(), userDto.getGender(), userDto.getAge(), userDto.getEmail(), userDto.getPhone()));
@@ -38,6 +45,9 @@ public class UserController {
 
     @DeleteMapping("/user/{id}")
     public ResponseEntity deleteUser(@PathVariable int id) {
+        if(userRepository.existsById(id)) {
+            return ResponseEntity.badRequest().build();
+        }
         userRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }

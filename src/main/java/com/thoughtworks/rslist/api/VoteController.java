@@ -9,6 +9,7 @@ import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.repository.VoteRepository;
 import com.thoughtworks.rslist.service.RsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -21,15 +22,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 @RestController
 public class VoteController {
+
+    private final VoteRepository voteRepository;
+    private final RsService rsService;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RsEventRepository rsEventRepository;
-    @Autowired
-    private VoteRepository voteRepository;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-    @Autowired
-    private RsService rsService;
+    public VoteController(VoteRepository voteRepository, RsService rsService) {
+        this.voteRepository = voteRepository;
+        this.rsService = rsService;
+    }
 
     @PostMapping("/rs/vote/{rsEventId}")
     ResponseEntity voteRsEvent(@PathVariable int rsEventId, @RequestBody @Valid Vote vote) {

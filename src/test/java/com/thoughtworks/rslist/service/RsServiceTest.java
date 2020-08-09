@@ -10,6 +10,12 @@ import com.thoughtworks.rslist.repository.VoteRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -20,8 +26,10 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 public class RsServiceTest {
-    RsService rsService;
+    @Autowired
+    BeanFactory beanFactory;
 
     @Mock
     private UserRepository userRepository;
@@ -32,12 +40,9 @@ public class RsServiceTest {
     private RsEventDto eventDto;
     private UserDto userDto;
 
-
     @BeforeEach
     void setUp() {
         initMocks(this);
-        rsService =new RsService(userRepository, rsEventRepository, voteRepository);
-
         userDto = UserDto.builder()
                 .id(1)
                 .username("default")
@@ -58,6 +63,9 @@ public class RsServiceTest {
 
     @Test
     void should_vote_success() {
+        // Given
+        RsService rsService = beanFactory.getBean(RsService.class, userRepository, rsEventRepository, voteRepository);
+
         LocalDateTime now = LocalDateTime.now();
         Vote vote = Vote.builder()
                 .userId(1)
@@ -89,6 +97,8 @@ public class RsServiceTest {
     @Test
     void should_throw_exception_when_voteNum_is_greater_than_user_has() {
         // Given
+        RsService rsService = beanFactory.getBean(RsService.class, userRepository, rsEventRepository, voteRepository);
+
         LocalDateTime now = LocalDateTime.now();
         Vote vote = Vote.builder()
                 .userId(1)
@@ -107,6 +117,8 @@ public class RsServiceTest {
     @Test
     void should_throw_exception_given_userId_is_not_exist() {
         // Given
+        RsService rsService = beanFactory.getBean(RsService.class, userRepository, rsEventRepository, voteRepository);
+
         LocalDateTime now = LocalDateTime.now();
         Vote vote = Vote.builder()
                 .userId(1)
@@ -125,6 +137,8 @@ public class RsServiceTest {
     @Test
     void should_throw_exception_given_rsEventId_is_not_exist() {
         // Given
+        RsService rsService = beanFactory.getBean(RsService.class, userRepository, rsEventRepository, voteRepository);
+
         LocalDateTime now = LocalDateTime.now();
         Vote vote = Vote.builder()
                 .userId(1)
